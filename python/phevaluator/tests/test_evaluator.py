@@ -19,6 +19,16 @@ class TestEvaluator(unittest.TestCase):
     self.assertEqual(p2, 236)
     self.assertLess(p2, p1)
 
+  def test_omaha_example(self):
+    p1 = evaluate_cards('4c', '5c', '6c', '7s', '8s',  # community cards
+                      '2c', '9c', 'As', 'Kd')  # player hole cards
+
+    p2 = evaluate_cards('4c', '5c', '6c', '7s', '8s',  # community cards
+                      '6s', '9s', 'Ts', 'Js')  # player hole cards
+
+    self.assertEqual(p1, 1578)
+    self.assertEqual(p2, 1604)
+
   def test_5cards(self):
     with open(CARDS_FILE_5, 'r') as read_file:
       hand_dict = json.load(read_file)

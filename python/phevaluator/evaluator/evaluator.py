@@ -1,6 +1,7 @@
 from evaluator.evaluator5 import evaluate_5cards
 from evaluator.evaluator6 import evaluate_6cards
 from evaluator.evaluator7 import evaluate_7cards
+from evaluator.evaluator_omaha import evaluate_omaha_cards
 
 rank_map = {
     '2': 0,
@@ -43,3 +44,5 @@ def evaluate_cards(*args):
     return evaluate_6cards(*cards)
   elif len(args) == 7:
     return evaluate_7cards(*cards)
+  elif len(args) == 9:
+    return evaluate_omaha_cards(*cards)
