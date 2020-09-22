@@ -1,8 +1,6 @@
 from evaluator.evaluator5 import evaluate_5cards
 from evaluator.evaluator6 import evaluate_6cards
 from evaluator.evaluator7 import evaluate_7cards
-from evaluator.evaluator8 import evaluate_8cards
-from evaluator.evaluator9 import evaluate_9cards
 
 rank_map = {
     '2': 0,
@@ -45,7 +43,3 @@ def evaluate_cards(*args):
     return evaluate_6cards(*cards)
   elif len(args) == 7:
     return evaluate_7cards(*cards)
-  elif len(args) == 8:
-    return evaluate_8cards(*cards)
-  elif len(args) == 9:
-    return evaluate_9cards(*cards)

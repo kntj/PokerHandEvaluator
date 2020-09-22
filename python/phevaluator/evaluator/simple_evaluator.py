@@ -5,8 +5,6 @@ from evaluator.hashtable import FLUSH
 from evaluator.hashtable5 import NO_FLUSH_5
 from evaluator.hashtable6 import NO_FLUSH_6
 from evaluator.hashtable7 import NO_FLUSH_7
-from evaluator.hashtable8 import NO_FLUSH_8
-from evaluator.hashtable9 import NO_FLUSH_9
 
 binaries_by_id = [
     0x1,  0x1,  0x1,  0x1,
@@ -75,10 +73,6 @@ def evaluate_cards(*args):
     return NO_FLUSH_6[hash_val]
   elif len(cards) == 7:
     return NO_FLUSH_7[hash_val]
-  elif len(cards) == 8:
-    value_noflush = NO_FLUSH_8[hash_val]
-  elif len(cards) == 9:
-    value_noflush = NO_FLUSH_9[hash_val]
 
   if value_flush < value_noflush:
     return value_flush

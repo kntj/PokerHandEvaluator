@@ -7,8 +7,6 @@ from evaluator.evaluator import evaluate_cards
 CARDS_FILE_5 = os.path.join(os.path.dirname(__file__), 'cardfiles/5cards.json')
 CARDS_FILE_6 = os.path.join(os.path.dirname(__file__), 'cardfiles/6cards.json')
 CARDS_FILE_7 = os.path.join(os.path.dirname(__file__), 'cardfiles/7cards.json')
-CARDS_FILE_8 = os.path.join(os.path.dirname(__file__), 'cardfiles/8cards.json')
-CARDS_FILE_9 = os.path.join(os.path.dirname(__file__), 'cardfiles/9cards.json')
 
 
 class TestEvaluator(unittest.TestCase):
@@ -38,15 +36,3 @@ class TestEvaluator(unittest.TestCase):
       hand_dict = json.load(read_file)
       for key, value in hand_dict.items():
         self.assertEqual(evaluate_cards(*key.split()), value)
- 
-  def test_8cards(self):
-    with open(CARDS_FILE_8, 'r') as read_file:
-      hand_dict = json.load(read_file)
-      for key, value in hand_dict.items():
-        self.assertEqual(evaluate_cards(*key.split()), value)
-
-  def test_9cards(self):
-      with open(CARDS_FILE_9, 'r') as read_file:
-        hand_dict = json.load(read_file)
-        for key, value in hand_dict.items():
-          self.assertEqual(evaluate_cards(*key.split()), value)
