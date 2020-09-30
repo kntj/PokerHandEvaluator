@@ -34,6 +34,3 @@ The main function is the `evaluate_cards` function in `phevaluator/evaluator/eva
 
 The function can take both numbers and card strings (with format like: 'Ah' or '2C'). Usage examples can be seen in `examples.py`.
 
-## The simple evaluator
-
-The simple_evaluator is also possible to use and can take in from 5-7 arguments. But it has worse performance.
