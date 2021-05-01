@@ -204,11 +204,11 @@ ordering is a perfect hash of this quinary.
 ```
  Problem: HashNQuinaryKSum
 
- Input: integer n, integer k, an n-bit quinary with the sum of all bits equal to
+ Input: integer n, integer k, an (n+1)-bit quinary with the sum of all bits equal to
  k
 
  Output: the position of the quinary in the lexicographical ordering of all
- n-bit quinaries with sum of all bits equal to k
+ (n+1)-bit quinaries with sum of all bits equal to k
 ```
 
 Similar to what we did in the binary hash, in order to get the position of the
@@ -231,12 +231,12 @@ it can be partitioned into 5 small ranges. The result of the problem is the
 sum of the result of the 5 subproblems with range of exactly a power of 5.
 
 We can use dynamic programming to solve all these subproblems, and store the
-result in an array. Let's use a 3-d array `dp[l][n][k]` of size `4*14*8`,
-where n is the number of bits, k is the remaining number of k, and l is the
+result in an array. Let's use a 3-d array `dp[l][n][k]` of size `5*14*8`,
+where n is the number of trailing zero bits, k is the remaining number of k, and l is the
 most significant bit of the excluding endpoint. For
-example, the result of `[0000, 1000)` is stored in `dp[1][4][k]`, as the
-excluding endpoint is 1000, resulting l to be 1 and n to be 4. Another
-example is `[000, 200)`, whose result is stored in `dp[2][3][k]`.
+example, the result of `[0000, 1000)` is stored in `dp[1][3][k]`, as the
+excluding endpoint is 1000, resulting l to be 1 and n to be 3. Another
+example is `[000, 200)`, whose result is stored in `dp[2][2][k]`.
 
 The base cases for the array dp:
 
@@ -246,30 +246,31 @@ The base cases for the array dp:
   if i > 4:
     dp[1][1][i] = 0;
 ```
-
-For example, the 1-bit quinary with k=4 has one instance, which is exactly 4.
-However there is no instance for a 1-bit quinary with k=5.
+For example, for `[00, 10)` with `k=4` there's only one legal quinary (04)
+However there is no instance for a quinary in the same range with `k=5` or any `k` larger than 4.
 
 Then we iterate the edges:
 
 ```
-  for each i in [1, 13]:
-    dp[1][i][1] = i; dp[1][i][0] = 1;
+  for each i in [2, 13]:
+    dp[1][i][1] = i; 
+    dp[1][i][0] = 1;
 ```
 
-An example is a 3-bit quinary with k=1, it has three instances 001, 010, 100. If
-k=0, the only one instance is 000.
+For example, a 4-bit quinary with k=1 (`dp[1][3][1]`) has three quinaries: 001, 010, 100. 
+If `k=0`, the only legal quinary 000.
 
-Now we can iterate all `dp[1][i][j]`:
+Now we can iterate all `dp[1][i][j]`. We do this by iterating the next digit from 0 to 4 
+and evaluating the shorter expression for smaller `k`. :
 
 ```
   for each i in [2, 13] and j in [2, 7]:
-    dp[1][i][j] = SUM{k:[0,4]}dp[0][i-1][j-k];
+    dp[1][i][j] = SUM{k:[0,4]}dp[1][i-1][j-k];
 ```
 
-For example, to evaluate `dp[1][2][7]`, we need to enumerate the second bit
-from 0 to 4, which are the quinaries 07, 16, 25, 34, 43. We know that 07, 16,
-25 are invalid and `dp[1][1][i] = 0` will ignore them.
+For example, to evaluate `dp[1][2][7]` (range `[000,100)` with `k=7`), we need to 
+enumerate the second bit from 0 to 4. This means summing for 07, 16, 25, 34, 43. 
+Notice that 07, 16, 25 are invalid and `dp[1][1][k] = 0 (for k > 4)` will ignore them.
 
 Now the iteration for the rest of the entries:
 
@@ -279,9 +280,9 @@ Now the iteration for the rest of the entries:
 ```
 
 For example `dp[4][4][5]`, which is equivalent to the number of valid
-quinaries in the range `[0000, 4000)` with k=5. It can be splitted into
-`[0000, 3000)` with k=5, and `[3000, 4000)`. The former one is `dp[3][4][5]`,
- the latter one is equivalent to `[000, 1000)` with k=k-3, which is
+quinaries in the range `[00000, 40000)` with k=5. It can be splitted into
+`[00000, 30000)` with k=5, and `[30000, 40000)`. The former one is `dp[3][4][5]`,
+ the latter one is equivalent to `[00000, 10000)` with k=k-3, which is
 `dp[1][4][2]`.
 
 Finally we can compute the hash of the quinary base on the dp arrays. The
