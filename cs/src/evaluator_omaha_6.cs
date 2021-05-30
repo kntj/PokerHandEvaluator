@@ -224,14 +224,14 @@ namespace PokerHandEvaluator
                 new int[] {h5, h6},
             };
 
-            var beatValue = combinationsCommunityCard
+            var bestValue = combinationsCommunityCard
                             .SelectMany(cc => 
                                 combinationsHoleCard
                                 .Select(ch => 
                                     Evaluator5.Evaluate_5cards(cc[0], cc[1], cc[2], ch[0], ch[1])))
                             .Min();
 
-            return beatValue;
+            return bestValue;
         }
     }
 }
