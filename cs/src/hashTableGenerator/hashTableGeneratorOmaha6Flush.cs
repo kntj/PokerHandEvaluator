@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace PokerHandEvaluator
 {
@@ -33,7 +31,7 @@ namespace PokerHandEvaluator
         public static void Create()
         {
             CreateTable();
-            Serialize();
+            WriteBinary();
             //Output();
         }
 
@@ -111,12 +109,20 @@ namespace PokerHandEvaluator
             }
         }
 
-        static void Serialize()
+        static void WriteBinary()
         {
-            IFormatter formatter = new BinaryFormatter();
-            using (var stream = new FileStream("flush_omaha_6.bin", FileMode.Create, FileAccess.Write, FileShare.None))
+            if (BitConverter.IsLittleEndian == false)
             {
-                formatter.Serialize(stream, Flush_omaha6);
+                throw new InvalidOperationException("not little endian");
+            }
+
+            using (var writer = new BinaryWriter(File.Open("flush_omaha_6.bin", FileMode.Create, FileAccess.Write, FileShare.None)))
+            {
+                var byteLen = Buffer.ByteLength(Flush_omaha6);
+                var byteArr = new Byte[byteLen];
+                Buffer.BlockCopy(Flush_omaha6, 0, byteArr, 0, byteLen);
+
+                writer.Write(byteArr);
             }
         }
 

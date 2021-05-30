@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace PokerHandEvaluator
 {
@@ -36,13 +34,24 @@ namespace PokerHandEvaluator
 
         static void ReadResourceBinary(string resourceName, short[] hashTable)
         {
+            if (BitConverter.IsLittleEndian == false)
+            {
+                throw new InvalidOperationException("not little endian");
+            }
+
             var assembly = Assembly.GetExecutingAssembly();
 
-            IFormatter formatter = new BinaryFormatter();  
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            using (var reader = new BinaryReader(assembly.GetManifestResourceStream(resourceName)))
             {
-                var src = (short[])formatter.Deserialize(stream);
-                Array.Copy(src, hashTable, src.Length); 
+                var byteLen = Buffer.ByteLength(hashTable);
+                var byteArr = new byte[byteLen];
+
+                if (reader.Read(byteArr, 0, byteLen) != byteLen)
+                {
+                    throw new InvalidOperationException("Invalid : " + resourceName);
+                }
+
+                Buffer.BlockCopy(byteArr, 0, hashTable, 0, byteLen);
             }
         }
 
